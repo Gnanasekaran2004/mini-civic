@@ -1,4 +1,4 @@
-// public/js/main.js
+/* // public/js/main.js
 document.addEventListener('DOMContentLoaded', () => {
   // Citizen Login/Register Logic
   const loginForm = document.getElementById('loginForm');
@@ -62,6 +62,79 @@ document.addEventListener('DOMContentLoaded', () => {
     handleFormSubmit(registerForm, '/api/auth/register', 'registerError');
   }
   if (adminLoginForm) {
+    handleFormSubmit(adminLoginForm, '/api/auth/login/admin', 'adminLoginError');
+  }
+}); */
+document.addEventListener('DOMContentLoaded', () => {
+  const loginForm = document.getElementById('loginForm');
+  const registerForm = document.getElementById('registerForm');
+  const adminLoginForm = document.getElementById('adminLoginForm');
+  
+  const showRegisterBtn = document.getElementById('showRegisterBtn');
+  const registerPopup = document.getElementById('registerPopup');
+  const closePopupBtn = document.getElementById('closePopupBtn');
+
+  if (showRegisterBtn) {
+    showRegisterBtn.addEventListener('click', () => {
+      registerPopup.style.display = 'flex';
+    });
+  }
+
+  if (closePopupBtn) {
+    closePopupBtn.addEventListener('click', () => {
+      registerPopup.style.display = 'none';
+    });
+  }
+  
+  if (registerPopup) {
+    registerPopup.addEventListener('click', (e) => {
+        if(e.target === registerPopup) {
+            registerPopup.style.display = 'none';
+        }
+    });
+  }
+  
+  const handleFormSubmit = async (form, url, errorElementId) => {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+      const errorElement = document.getElementById(errorElementId);
+      errorElement.textContent = '';
+
+      try {
+        const response = await fetch(url, { // URL is passed in here
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+
+        const result = await response.json();
+        
+        if (response.ok && result.redirectUrl) {
+          window.location.href = result.redirectUrl;
+        } else {
+          errorElement.textContent = result.message || 'An unknown error occurred.';
+          if (typeof grecaptcha !== 'undefined') {
+            grecaptcha.reset();
+          }
+        }
+      } catch (err) {
+        errorElement.textContent = 'Failed to connect to the server. Please try again later.';
+      }
+    });
+  };
+
+  if (loginForm) {
+    // ✅ Using relative URL
+    handleFormSubmit(loginForm, '/api/auth/login/citizen', 'loginError');
+  }
+  if (registerForm) {
+    // ✅ Using relative URL
+    handleFormSubmit(registerForm, '/api/auth/register', 'registerError');
+  }
+  if (adminLoginForm) {
+    // ✅ Using relative URL
     handleFormSubmit(adminLoginForm, '/api/auth/login/admin', 'adminLoginError');
   }
 });
