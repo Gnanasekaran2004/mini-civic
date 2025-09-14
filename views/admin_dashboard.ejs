@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="logo">CivicConnect - Admin</div>
+        <nav>
+            <a href="/admin-dashboard" class="active">Dashboard</a>
+            <a href="/api/auth/logout" class="btn btn-logout">Logout</a>
+        </nav>
+    </header>
+
+    <main class="container page-container">
+        <div class="page-header">
+            <h1>Admin Dashboard</h1>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3><i class="fas fa-list-alt"></i> Total Issues</h3>
+                <p><%= stats.total %></p>
+            </div>
+            <div class="stat-card">
+                <h3><i class="fas fa-exclamation-triangle"></i> Pending Issues</h3>
+                <p><%= stats.pending %></p>
+            </div>
+            <div class="stat-card">
+                <h3><i class="fas fa-tools"></i> In Progress</h3>
+                <p><%= stats.working %></p>
+            </div>
+            <div class="stat-card">
+                <h3><i class="fas fa-check-circle"></i> Resolved Issues</h3>
+                <p><%= stats.resolved %></p>
+            </div>
+        </div>
+
+        <div class="filter-bar card">
+            <form method="GET" action="/admin-dashboard" class="filter-form">
+                <div class="form-group">
+                    <label for="phoneNo">Search by Phone Number</label>
+                    <input type="tel" name="phoneNo" id="phoneNo" placeholder="Enter phone number..." value="<%= locals.currentPhoneNo || '' %>">
+                </div>
+                 <div class="form-group">
+                    <label for="status">Filter by Status</label>
+                    <select name="status" id="status">
+                        <option value="">Pending Issues</option>
+                        <option value="All" <%= locals.currentStatus === 'All' ? 'selected' : '' %>>All Issues</option>
+                        <option value="Sent" <%= locals.currentStatus === 'Sent' ? 'selected' : '' %>>Sent</option>
+                        <option value="Viewed" <%= locals.currentStatus === 'Viewed' ? 'selected' : '' %>>Viewed</option>
+                        <option value="Working" <%= locals.currentStatus === 'Working' ? 'selected' : '' %>>Working</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Search</button>
+                    <a href="/admin-dashboard" class="btn btn-secondary">Clear</a>
+                </div>
+            </form>
+        </div>
+
+
+        <div class="table-container card">
+            <h2>Current Issues</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Citizen</th>
+                        <th>Phone</th>
+                        <th>Type</th>
+                        <th>Address</th>
+                        <th>Image</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if(issues.length > 0) { %>
+                        <% issues.forEach(issue => { %>
+                            <tr>
+                                <td><%= issue.citizen.name %></td>
+                                <td><%= issue.citizen.phoneNo %></td>
+                                <td><%= issue.issueType %></td>
+                                <td><%= issue.address %></td>
+                                <td>
+                                    <% if(issue.imageUrl) { %>
+                                        <a href="<%= issue.imageUrl %>" target="_blank" class="image-link">View</a>
+                                    <% } else { %>
+                                        N/A
+                                    <% } %>
+                                </td>
+                                <td>
+                                    <span class="status status-<%= issue.status %>"><%= issue.status %></span>
+                                </td>
+                                <td>
+                                    <form action="/api/admin/issues/<%= issue._id %>/status" method="POST">
+                                        <select name="status" onchange="this.form.submit()">
+                                            <option disabled selected>Change Status</option>
+                                            <option value="Sent">Sent</option>
+                                            <option value="Viewed">Viewed</option>
+                                            <option value="Working">Working</option>
+                                            <option value="Resolved">Resolved</option>
+                                        </select>
+                                    </form>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    <% } else { %>
+                        <tr><td colspan="7" style="text-align: center;">No issues match your current filters.</td></tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</body>
+</html>

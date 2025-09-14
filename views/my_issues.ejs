@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Reported Issues</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="logo">CivicConnect</div>
+        <nav>
+            <a href="/citizen-dashboard">Dashboard</a>
+            <a href="/my-issues" class="active">My Issues</a>
+            <a href="/api/auth/logout" class="btn btn-logout">Logout</a>
+        </nav>
+    </header>
+
+    <main class="container page-container">
+        <div class="page-header">
+            <h1>My Reported Issues</h1>
+            <p>Track the status of all the issues you've reported.</p>
+        </div>
+
+        <div class="filter-bar card">
+            <form method="GET" action="/my-issues" class="filter-form">
+                <div class="form-group">
+                    <label for="status">Filter by Status</label>
+                    <select name="status" id="status">
+                        <option value="">All Statuses</option>
+                        <option value="Sent" <%= locals.currentStatus === 'Sent' ? 'selected' : '' %>>Sent</option>
+                        <option value="Viewed" <%= locals.currentStatus === 'Viewed' ? 'selected' : '' %>>Viewed</option>
+                        <option value="Working" <%= locals.currentStatus === 'Working' ? 'selected' : '' %>>Working</option>
+                        <option value="Resolved" <%= locals.currentStatus === 'Resolved' ? 'selected' : '' %>>Resolved</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="date">Filter by Date</label>
+                    <input type="date" name="date" id="date" value="<%= locals.currentDate || '' %>">
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Apply Filters</button>
+                    <a href="/my-issues" class="btn btn-secondary">Clear</a>
+                </div>
+            </form>
+        </div>
+
+        <div class="issues-grid">
+            <% if(issues.length > 0) { %>
+                <% issues.forEach(issue => { %>
+                    <div class="issue-card">
+                        <div class="card-header">
+                            <h3><%= issue.issueType %></h3>
+                            <span class="status status-<%= issue.status %>"><%= issue.status %></span>
+                        </div>
+                        <div class="card-body">
+                            <p class="issue-address"><i class="fas fa-map-marker-alt"></i> <%= issue.address %></p>
+                            <p class="issue-description"><%= issue.description %></p>
+                            <% if(issue.imageUrl) { %>
+                                <a href="<%= issue.imageUrl %>" target="_blank" class="image-link">View Attached Image</a>
+                            <% } %>
+                        </div>
+                        <div class="card-footer">
+                            <small>Reported on: <%= new Date(issue.createdAt).toLocaleDateString() %></small>
+                            <form action="/api/citizen/issues/<%= issue._id %>/delete" method="POST" onsubmit="return confirm('Are you sure you want to permanently delete this issue?');">
+                                    <button type="submit" class="btn-delete">
+                                        <i class="fas fa-trash-alt"></i> Delete
+                                    </button>
+                            </form>
+                        </div>
+                    </div>
+                <% }) %>
+            <% } else { %>
+                <div class="card no-issues-card">
+                    <h2>No Issues Found</h2>
+                    <p>No issues match your current filters. Try clearing them or report a new issue from your dashboard!</p>
+                </div>
+            <% } %>
+        </div>
+    </main>
+</body>
+</html>

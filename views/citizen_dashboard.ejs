@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Citizen Dashboard</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="logo">CivicConnect</div>
+        <nav>
+            <a href="/citizen-dashboard" class="active">Dashboard</a>
+            <a href="/my-issues">My Issues</a>
+            <a href="/api/auth/logout" class="btn btn-logout">Logout</a>
+        </nav>
+    </header>
+
+    <main class="container page-container">
+        <div class="page-header">
+            <h1>Welcome, <%= citizen.name %></h1>
+            <p>Report a new civic issue to help improve your community.</p>
+        </div>
+        
+        <div class="card form-card">
+            <h2><i class="fas fa-bullhorn"></i> Report a New Issue</h2>
+            <% if (locals.error === 'FileTooLarge') { %>
+                <p class="error-message">Upload failed. The image must be under 1MB.</p>
+            <% } else if (locals.error) { %>
+                 <p class="error-message">An error occurred. Please check all fields.</p>
+            <% } %>
+            <form action="/api/citizen/issues" method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="issueType">Type of Issue</label>
+                    <select name="issueType" id="issueType" required>
+                        <option value="" disabled selected>Select an issue type...</option>
+                        <option value="Electricity">Electricity</option>
+                        <option value="Water">Water</option>
+                        <option value="Road">Road</option>
+                        <option value="Garbage">Garbage</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="address">Address / Location of Issue</label>
+                    <textarea name="address" id="address" rows="2" required placeholder="e.g., Near Main Street Park, Sector 5"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea name="description" id="description" rows="4" required placeholder="Describe the issue in detail..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="issueImage">Add Image (Optional, max 1MB)</label>
+                    <input type="file" name="issueImage" id="issueImage" accept="image/*">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Submit Report</button>
+            </form>
+        </div>
+    </main>
+</body>
+</html>

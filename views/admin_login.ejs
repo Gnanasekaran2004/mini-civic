@@ -1,0 +1,81 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Citizen Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/586347944c.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-box">
+            <h2>admin-login</h2>
+            <form id="loginForm" novalidate>
+                <div class="form-group">
+                    <label for="phoneNo">Admin name</label>
+                    <input type="text" id="phoneNo" name="phoneNo" required placeholder="Enter your admin name">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required placeholder="Enter your password">
+                </div>
+                <div class="g-recaptcha" data-sitekey="<%= recaptchaSiteKey %>"></div>
+                <button type="submit" class="btn btn-primary" style="width:100%; margin-top: 1rem;">Login</button>
+            </form>
+            <p id="loginError" class="error-message"></p>
+            <p class="auth-switch">
+                Don't have an account? 
+                <button id="showRegisterBtn" class="link-button">Register Now</button>
+            </p>
+        </div>
+    </div>
+
+    <div id="registerPopup" class="popup-overlay">
+        <div class="popup-content card">
+            <span id="closePopupBtn" class="close-btn">&times;</span>
+            <h2>Create Your Account</h2>
+            <form id="registerForm" novalidate>
+                <button type="submit" class="btn btn-primary" style="width:100%;">Register</button>
+                <p id="registerError" class="error-message"></p>
+            </form>
+        </div>
+    </div>
+
+    <script src="/js/main.js"></script>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-box">
+        <h2>Admin Login</h2>
+        <form id="adminLoginForm" novalidate>
+            <div class="form-group">
+                <label for="adminId">Admin ID</label>
+                <input type="text" id="adminId" name="adminId" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div class="g-recaptcha" data-sitekey="<%= recaptchaSiteKey %>" style="margin: 1rem 0; transform:scale(0.9); transform-origin:0 0;"></div>
+            <button type="submit" class="btn btn-primary" style="width:100%;">Login</button>
+        </form>
+        <p id="adminLoginError" class="error-message"></p>
+    </div>
+    <script src="/js/main.js"></script>
+</body>
+</html>
